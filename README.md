@@ -1,2 +1,2 @@
 # go-im
-基于zinx的im游戏模块
+基于zinx的im聊天与实时战斗
