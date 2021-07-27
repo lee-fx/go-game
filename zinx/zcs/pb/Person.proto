@@ -1,0 +1,22 @@
+syntax = "proto3";
+option go_package = "../pb";
+package pb;
+
+// d:\go\pkg\mod\protoc-3.12.3-win64\bin\protoc.exe --go_out=. *.proto
+message Person {
+    string name = 1;
+    int32 age = 2;
+    repeated string emails = 3;
+    repeated PhoneNumber phones = 4;
+}
+
+enum PhoneType {
+    MOBILE = 0;
+    HOME = 1;
+    WORK = 2;
+}
+
+message PhoneNumber {
+    string number = 1;
+    PhoneType type = 2;
+}
