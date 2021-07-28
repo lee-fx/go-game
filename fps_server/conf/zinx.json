@@ -1,0 +1,7 @@
+{
+  "Name": "FPS Game Server",
+  "Host": "0.0.0.0",
+  "TcpPort": 8999,
+  "MaxConn": 5000,
+  "WorkerPoolSize": 8
+}

@@ -1,0 +1,28 @@
+syntax = "proto3";  // Proto协议
+option go_package = "../pb";  // 生成的包名
+option csharp_namespace = "Pb"; // 给c#提供的选项
+package pb;       // 当前包名
+
+// 服务端返回玩家ID
+message SyncPid {
+  int32 Pid = 1; // 服务器新生成玩家ID
+}
+
+// 位置信息xyz轴坐标 已经倾斜角度v
+message Position {
+  float X = 1;
+  float Y = 2;
+  float Z = 3;
+  float V = 4;
+}
+
+// 广播消息
+message BroadCast {
+  int32 Pid = 1;
+  int32 Tp = 2;  // 1-世界聊天， 2-玩家位置， 3-动作，4-移动之后的坐标信息更新
+  oneof Data {
+    string Content = 3;   // 玩家聊天信息
+    Position P = 4;       // 广播玩家位置
+    int32 ActionData = 5; // 玩家具体动作
+  }
+}

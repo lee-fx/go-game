@@ -44,7 +44,7 @@ type Conn struct {
 // 初始化链接模块方法
 func NewConn(server ziface.IServer, conn *net.TCPConn, connID uint32, msgHandle ziface.IMsgHandle) *Conn {
 	c := &Conn{
-		TcpServer: server,
+		TcpServer:  server,
 		Conn:       conn,
 		ConnID:     connID,
 		MsgHandler: msgHandle,
@@ -102,7 +102,6 @@ func (c *Conn) StartReader() {
 			// 根据绑定好的MsgID 找到对应处理api业务执行
 			go c.MsgHandler.DoMsgHandler(req)
 		}
-
 
 	}
 }
@@ -194,12 +193,14 @@ func (c *Conn) SendMsg(msgId uint32, data []byte) error {
 	c.msgChan <- binaryMsg
 	return nil
 }
+
 // 设置链接属性
 func (c *Conn) SetProperty(key string, value interface{}) {
 	c.propertyLock.Lock()
 	defer c.propertyLock.Unlock()
 	c.property[key] = value
 }
+
 // 获取链接属性
 func (c *Conn) GetProperty(key string) (interface{}, error) {
 	c.propertyLock.RLock()
@@ -209,6 +210,7 @@ func (c *Conn) GetProperty(key string) (interface{}, error) {
 	}
 	return nil, errors.New("no property found!")
 }
+
 // 移除链接属性
 func (c *Conn) RemoveProperty(key string) {
 	c.propertyLock.Lock()
