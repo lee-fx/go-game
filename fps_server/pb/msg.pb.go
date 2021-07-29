@@ -251,6 +251,54 @@ func (*BroadCast_P) isBroadCast_Data() {}
 
 func (*BroadCast_ActionData) isBroadCast_Data() {}
 
+// 世界聊天
+type Talk struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Content string `protobuf:"bytes,1,opt,name=Content,proto3" json:"Content,omitempty"`
+}
+
+func (x *Talk) Reset() {
+	*x = Talk{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_msg_proto_msgTypes[3]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *Talk) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Talk) ProtoMessage() {}
+
+func (x *Talk) ProtoReflect() protoreflect.Message {
+	mi := &file_msg_proto_msgTypes[3]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Talk.ProtoReflect.Descriptor instead.
+func (*Talk) Descriptor() ([]byte, []int) {
+	return file_msg_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *Talk) GetContent() string {
+	if x != nil {
+		return x.Content
+	}
+	return ""
+}
+
 var File_msg_proto protoreflect.FileDescriptor
 
 var file_msg_proto_rawDesc = []byte{
@@ -270,8 +318,10 @@ var file_msg_proto_rawDesc = []byte{
 	0x69, 0x74, 0x69, 0x6f, 0x6e, 0x48, 0x00, 0x52, 0x01, 0x50, 0x12, 0x20, 0x0a, 0x0a, 0x41, 0x63,
 	0x74, 0x69, 0x6f, 0x6e, 0x44, 0x61, 0x74, 0x61, 0x18, 0x05, 0x20, 0x01, 0x28, 0x05, 0x48, 0x00,
 	0x52, 0x0a, 0x41, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x44, 0x61, 0x74, 0x61, 0x42, 0x06, 0x0a, 0x04,
-	0x44, 0x61, 0x74, 0x61, 0x42, 0x0c, 0x5a, 0x05, 0x2e, 0x2e, 0x2f, 0x70, 0x62, 0xaa, 0x02, 0x02,
-	0x50, 0x62, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x44, 0x61, 0x74, 0x61, 0x22, 0x20, 0x0a, 0x04, 0x54, 0x61, 0x6c, 0x6b, 0x12, 0x18, 0x0a, 0x07,
+	0x43, 0x6f, 0x6e, 0x74, 0x65, 0x6e, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x43,
+	0x6f, 0x6e, 0x74, 0x65, 0x6e, 0x74, 0x42, 0x0c, 0x5a, 0x05, 0x2e, 0x2e, 0x2f, 0x70, 0x62, 0xaa,
+	0x02, 0x02, 0x50, 0x62, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -286,11 +336,12 @@ func file_msg_proto_rawDescGZIP() []byte {
 	return file_msg_proto_rawDescData
 }
 
-var file_msg_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_msg_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_msg_proto_goTypes = []interface{}{
 	(*SyncPid)(nil),   // 0: pb.SyncPid
 	(*Position)(nil),  // 1: pb.Position
 	(*BroadCast)(nil), // 2: pb.BroadCast
+	(*Talk)(nil),      // 3: pb.Talk
 }
 var file_msg_proto_depIdxs = []int32{
 	1, // 0: pb.BroadCast.P:type_name -> pb.Position
@@ -343,6 +394,18 @@ func file_msg_proto_init() {
 				return nil
 			}
 		}
+		file_msg_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Talk); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 	}
 	file_msg_proto_msgTypes[2].OneofWrappers = []interface{}{
 		(*BroadCast_Content)(nil),
@@ -355,7 +418,7 @@ func file_msg_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_msg_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   3,
+			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

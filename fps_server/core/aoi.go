@@ -6,6 +6,17 @@ import "fmt"
 aoi 管理模块
 */
 
+// 地图宏
+const (
+	AOI_MIN_X int = 85
+	AOI_MAX_X int = 410
+	AOI_CNTS_X int = 10
+
+	AOI_MIN_Y int = 10
+	AOI_MAX_Y int = 75
+	AOI_CNTS_Y int = 20
+)
+
 type AOIManager struct {
 	// 左边界坐标
 	MinX int

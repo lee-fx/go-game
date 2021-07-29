@@ -3,6 +3,8 @@ option go_package = "../pb";  // 生成的包名
 option csharp_namespace = "Pb"; // 给c#提供的选项
 package pb;       // 当前包名
 
+// d:\go\pkg\mod\protoc-3.12.3-win64\bin\protoc.exe --go_out=. *.proto
+
 // 服务端返回玩家ID
 message SyncPid {
   int32 Pid = 1; // 服务器新生成玩家ID
@@ -25,4 +27,9 @@ message BroadCast {
     Position P = 4;       // 广播玩家位置
     int32 ActionData = 5; // 玩家具体动作
   }
+}
+
+// 世界聊天
+message Talk{
+  string Content = 1;
 }
