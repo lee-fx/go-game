@@ -42,14 +42,15 @@ func (g *Grid) Add(playerID int) {
 func (g *Grid) Delete(playerID int) {
 	g.pIDLock.Lock()
 	defer g.pIDLock.Unlock()
-	g.playerIDs[playerID] = true
+
 	delete(g.playerIDs, playerID)
 }
 
 // 获取格子所有玩家
 func (g *Grid) GetPlayerIDs() (playerIDs []int) {
-	g.pIDLock.RLocker()
+	g.pIDLock.RLock()
 	defer g.pIDLock.RUnlock()
+
 	for k, _ := range g.playerIDs {
 		playerIDs = append(playerIDs, k)
 	}

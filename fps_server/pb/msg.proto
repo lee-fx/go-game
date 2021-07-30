@@ -5,12 +5,12 @@ package pb;       // 当前包名
 
 // d:\go\pkg\mod\protoc-3.12.3-win64\bin\protoc.exe --go_out=. *.proto
 
-// 服务端返回玩家ID
+// 服务端返回玩家ID (MsgID: 1)   &&  玩家掉线/AOI消失 (MsgID: 201`)
 message SyncPid {
   int32 Pid = 1; // 服务器新生成玩家ID
 }
 
-// 位置信息xyz轴坐标 已经倾斜角度v
+// 位置信息xyz轴坐标 已经倾斜角度v   MsgID: 3
 message Position {
   float X = 1;
   float Y = 2;
@@ -18,7 +18,7 @@ message Position {
   float V = 4;
 }
 
-// 广播消息
+// 广播消息   MsgID: 200
 message BroadCast {
   int32 Pid = 1;
   int32 Tp = 2;  // 1-世界聊天， 2-玩家位置， 3-动作，4-移动之后的坐标信息更新
@@ -29,7 +29,17 @@ message BroadCast {
   }
 }
 
-// 世界聊天
+// 世界聊天 MsgID: 2
 message Talk{
   string Content = 1;
+}
+
+// 同步周围人位置信息包括自己
+message SyncPlayers {
+  repeated Player ps = 1;   // 重复的玩家信息
+}
+
+message Player {
+  int32 Pid = 1;  // 玩家id
+  Position P = 2; // 位置
 }

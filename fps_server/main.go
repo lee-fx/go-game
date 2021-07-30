@@ -24,6 +24,9 @@ func OnConnAdd(conn ziface.IConn) {
 	// 将该链接绑定一个Pid 玩家的id属性
 	conn.SetProperty("pid", player.Pid)
 
+	// 同步周边玩家 告知他们当前玩家已经上线了
+	player.SyncSurrounding()
+
 	fmt.Println("==========> Player Pid = ", player.Pid, " is arrived <==============")
 }
 

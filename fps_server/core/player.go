@@ -27,14 +27,15 @@ var IdLock sync.Mutex
 // 创建玩家
 func NewPlayer(conn ziface.IConn) *Player {
 	IdLock.Lock()
+	ID := PidGen
 	PidGen++
 	IdLock.Unlock()
 	return &Player{
-		Pid:  PidGen,
+		Pid:  ID,
 		Conn: conn,
-		X:    float32(160 + rand.Intn(10)), // 随机生成
-		Y:    9,
-		Z:    float32(140 + rand.Intn(20)),
+		X:    float32(160 + rand.Intn(20)), // 随机生成
+		Y:    0,
+		Z:    float32(134 + rand.Intn(10)),
 		V:    0,
 	}
 }
@@ -98,5 +99,59 @@ func (p *Player) Talk(content string) {
 		},
 	}
 
-	p.SendMsg(200, proto_msg)
+	// 获取所有玩家 并发送组装好的消息
+	players := WorldMgrObj.GetAllPlayer()
+	for _, player := range players {
+		player.SendMsg(200, proto_msg)
+	}
+}
+
+// 同步玩家上线位置消息
+func (p *Player) SyncSurrounding() {
+	// 获取周围九宫格玩家
+	pids := WorldMgrObj.AoiMgr.GetPidsByPos(p.X, p.Z)
+
+	players := make([]*Player, 0, len(pids))
+
+	// 发送给玩家自己位置
+	for _, v := range pids {
+		players = append(players, WorldMgrObj.GetPlayerByPid(int32(v)))
+	}
+
+	proto_msg := &pb.BroadCast{
+		Pid: p.Pid,
+		Tp: 2,
+		Data: &pb.BroadCast_P{
+			P: &pb.Position{
+				X: p.X,
+				Y: p.Y,
+				Z: p.Z,
+				V: p.V,
+			},
+		},
+	}
+
+	for _, v := range players {
+		v.SendMsg(200, proto_msg)
+	}
+
+	// 将周围玩家同步给自己
+	playersData := make([]*pb.Player, 0, len(players))
+	for _, player := range players {
+		p := &pb.Player{
+			Pid: player.Pid,
+			P: &pb.Position{
+				X: player.X,
+				Y: player.Y,
+				Z: player.Z,
+				V: player.V,
+			},
+		}
+		playersData = append(playersData, p)
+	}
+
+	SyncPlayersMsg := &pb.SyncPlayers{
+		Ps: playersData[:],
+	}
+	p.SendMsg(202, SyncPlayersMsg)
 }

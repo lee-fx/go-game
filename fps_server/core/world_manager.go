@@ -32,7 +32,7 @@ func (wm *WorldManager) AddPlayer(player *Player) {
 	defer wm.pLock.Unlock()
 	wm.Players[player.Pid] = player
 
-	wm.AoiMgr.AddToGridByPos(int(player.Pid), player.X, player.Y)
+	wm.AoiMgr.AddToGridByPos(int(player.Pid), player.X, player.Z)
 }
 
 // 删除一个玩家

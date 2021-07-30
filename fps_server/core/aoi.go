@@ -8,12 +8,11 @@ aoi 管理模块
 
 // 地图宏
 const (
-	AOI_MIN_X int = 85
-	AOI_MAX_X int = 410
+	AOI_MIN_X  int = 85
+	AOI_MAX_X  int = 410
 	AOI_CNTS_X int = 10
-
-	AOI_MIN_Y int = 10
-	AOI_MAX_Y int = 75
+	AOI_MIN_Y  int = 75
+	AOI_MAX_Y  int = 400
 	AOI_CNTS_Y int = 20
 )
 
@@ -93,30 +92,32 @@ func (m *AOIManager) GetSurroundGridsByGid(gID int) (grids []*Grid) {
 	// 初始化grids返回值切片
 	grids = append(grids, m.grids[gID])
 
-	idx := gID % m.CntsX
-	if idx > 0 {
-		grids = append(grids, m.grids[gID-1])
-	}
-	if idx < m.CntsX-1 {
-		grids = append(grids, m.grids[gID+1])
-	}
+	// 根据gID, 得到格子所在的坐标
+	x, y := gID%m.CntsX, gID/m.CntsX
 
-	// 坐标及左右坐标集合
-	gidsX := make([]int, 0, len(grids))
+	// 新建一个临时存储周围格子的数组
+	surroundGID := make([]int, 0)
 
-	for _, v := range grids {
-		gidsX = append(gidsX, v.GID)
-	}
+	// 新建8个方向向量: 左上: (-1, -1), 左中: (-1, 0), 左下: (-1,1), 中上: (0,-1), 中下: (0,1), 右上:(1, -1)
+	// 右中: (1, 0), 右下: (1, 1), 分别将这8个方向的方向向量按顺序写入x, y的分量数组
+	dx := []int{-1, -1, -1, 0, 0, 1, 1, 1}
+	dy := []int{-1, 0, 1, -1, 1, -1, 0, 1}
 
-	for _, v := range gidsX {
-		idy := v / m.CntsY
-		if idy > 0 {
-			grids = append(grids, m.grids[v-m.CntsX])
-		}
-		if idy < m.CntsY-1 {
-			grids = append(grids, m.grids[v+m.CntsX])
+	// 根据8个方向向量, 得到周围点的相对坐标, 挑选出没有越界的坐标, 将坐标转换为gID
+	for i := 0; i < 8; i++ {
+		newX := x + dx[i]
+		newY := y + dy[i]
+
+		if newX >= 0 && newX < m.CntsX && newY >= 0 && newY < m.CntsY {
+			surroundGID = append(surroundGID, newY*m.CntsX+newX)
 		}
 	}
+
+	// 根据没有越界的gID, 得到格子信息
+	for _, gID := range surroundGID {
+		grids = append(grids, m.grids[gID])
+	}
+
 	return
 }
 
