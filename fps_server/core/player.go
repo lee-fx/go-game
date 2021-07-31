@@ -76,7 +76,7 @@ func (p *Player) SyncPid() {
 func (p *Player) BroadCastStartPosition() {
 	data := &pb.BroadCast{
 		Pid: p.Pid,
-		Tp:  2,
+		Tp:  2, // 上线坐标
 		Data: &pb.BroadCast_P{
 			P: &pb.Position{
 				X: p.X,
@@ -109,18 +109,20 @@ func (p *Player) Talk(content string) {
 // 同步玩家上线位置消息
 func (p *Player) SyncSurrounding() {
 	// 获取周围九宫格玩家
-	pids := WorldMgrObj.AoiMgr.GetPidsByPos(p.X, p.Z)
 
-	players := make([]*Player, 0, len(pids))
-
-	// 发送给玩家自己位置
-	for _, v := range pids {
-		players = append(players, WorldMgrObj.GetPlayerByPid(int32(v)))
-	}
+	players := p.GetSuroundingPlayers()
+	//pids := WorldMgrObj.AoiMgr.GetPidsByPos(p.X, p.Z)
+	//
+	//players := make([]*Player, 0, len(pids))
+	//
+	//// 发送给玩家自己位置
+	//for _, v := range pids {
+	//	players = append(players, WorldMgrObj.GetPlayerByPid(int32(v)))
+	//}
 
 	proto_msg := &pb.BroadCast{
 		Pid: p.Pid,
-		Tp: 2,
+		Tp:  2,
 		Data: &pb.BroadCast_P{
 			P: &pb.Position{
 				X: p.X,
@@ -154,4 +156,64 @@ func (p *Player) SyncSurrounding() {
 		Ps: playersData[:],
 	}
 	p.SendMsg(202, SyncPlayersMsg)
+}
+
+// 广播玩家位置信息
+func (p *Player) UpdatePos(x, y, z, v float32) {
+	// 更新自己的坐标
+	p.X = x
+	p.Y = y
+	p.Z = z
+	p.V = v
+
+	// 组建广播位置协议信息
+	proto_msg := &pb.BroadCast{
+		Pid: p.Pid,
+		Tp:  4,
+		Data: &pb.BroadCast_P{
+			P: &pb.Position{
+				X: x,
+				Y: y,
+				Z: z,
+				V: v,
+			},
+		},
+	}
+
+	players := p.GetSuroundingPlayers()
+
+	// 循环发送位置信息
+	for _, player := range players {
+		player.SendMsg(200, proto_msg)
+	}
+}
+
+// 获取周围九宫格玩家
+func (p *Player) GetSuroundingPlayers() []*Player {
+	// 得到当前AOI九宫格内的所有玩家
+	pids := WorldMgrObj.AoiMgr.GetPidsByPos(p.X, p.Z)
+
+	// 将pid对应的players放入返回的玩家数组中
+	players := make([]*Player, 0, len(pids))
+
+	for _, v := range pids {
+		players = append(players, WorldMgrObj.Players[int32(v)])
+	}
+
+	return players
+}
+
+// 玩家下线
+func (p *Player) OffLine() {
+	players := p.GetSuroundingPlayers()
+	proto_msg := &pb.SyncPid{
+		Pid: p.Pid,
+	}
+	for _, player := range players {
+		player.SendMsg(201, proto_msg)
+	}
+
+	// 释放资源
+	WorldMgrObj.AoiMgr.RemoveFromGridByPos(int(p.Pid), p.X, p.Z)
+	WorldMgrObj.RemovePlayer(p.Pid)
 }
