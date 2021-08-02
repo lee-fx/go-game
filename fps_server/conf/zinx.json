@@ -3,5 +3,7 @@
   "Host": "0.0.0.0",
   "TcpPort": 8999,
   "MaxConn": 5000,
-  "WorkerPoolSize": 8
+  "WorkerPoolSize": 8,
+  "LogDir": "./log",
+  "LogFile":"game.log"
 }

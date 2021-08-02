@@ -1,0 +1,8 @@
+<MODULE>2021/08/02 16:09:27 [DEBUG]zlogger_test.go:29: ===> zinx debug content ~~666
+<MODULE>2021/08/02 16:09:27 [DEBUG]zlogger_test.go:30: ===> zinx debug content ~~888
+<MODULE>2021/08/02 16:09:27 [ERROR]zlogger_test.go:31: ===> zinx Error!!!! ~~~555~~~
+<MODULE>2021/08/02 16:09:27 [ERROR]zlogger_test.go:37: ===> zinx Error  after debug close !!!!
+<MODULE>2021/08/02 16:55:55 [DEBUG]zlogger_test.go:29: ===> zinx debug content ~~666
+<MODULE>2021/08/02 16:55:55 [DEBUG]zlogger_test.go:30: ===> zinx debug content ~~888
+<MODULE>2021/08/02 16:55:55 [ERROR]zlogger_test.go:31: ===> zinx Error!!!! ~~~555~~~
+<MODULE>2021/08/02 16:55:55 [ERROR]zlogger_test.go:37: ===> zinx Error  after debug close !!!!
